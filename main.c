@@ -42,7 +42,7 @@ void *subp1(){
 		sleep(1);//sleep 0.1
 		//print end
 		
-		V(semid, 0);//v (s0), sub2 p(s1) can run
+		V(semid, 0);//v (s0), sub2 p(s0) can run
 	}
 }
 // thread2: compute
