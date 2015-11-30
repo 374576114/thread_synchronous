@@ -11,7 +11,14 @@ void* subp2();
 int semid;
 pthread_t p1, p2;
 int a = 0;
-
+int bPrint = 1;
+const int max = 9;
+/*union semun{
+	int val;
+	struct semid_ds *buf;
+	unsigned short *array;
+	struct seminfo *__buf;
+}*/
 // p operation
 void P(int semid, int index){
 	struct sembuf sem;
@@ -36,19 +43,21 @@ void V(int semid, int index){
 void *subp1(){
 	while(1){
 		P(semid, 1);//if v(s1), that can run
-
+		
+		if(bPrint == 0 ){
+			V(semid, 0);
+			break;
+		}
 		//print somrhing...
 		printf(" %d \n", a);
 		sleep(1);//sleep 0.1
 		//print end
-		
 		V(semid, 0);//v (s0), sub2 p(s0) can run
 	}
 }
 // thread2: compute
 void * subp2(){
-	while(1){
-
+	while(a<max){
 		//compute something..
 		if(a < 0){
 			a = 0;
@@ -60,6 +69,8 @@ void * subp2(){
 		V(semid, 1);//v (s1), subp1 p(s1) can run
 		P(semid, 0);//if v(s0), it will run
 	}
+	bPrint = 0;
+	V(semid, 1);
 }
 
 int main(){
@@ -72,6 +83,8 @@ int main(){
 	pthread_create(&p2, NULL, subp2, NULL);
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
+	semctl(semid, 0, IPC_RMID, NULL);
+	semctl(semid, 1, IPC_RMID, NULL);
 	return 0;
 }
 
