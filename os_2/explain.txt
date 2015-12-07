@@ -1,0 +1,16 @@
+#copy get put 之间的运行图关系
+
+			-> put			->put	
+get -> copy			-> copy			****  ->get -> copy ->put
+			-> get			->get
+
+
+
+s0 copy完毕, 可以进行再次get
+
+		---s1 get完毕,可以copy
+限制copy|(需要同时满足)
+		---s2 put完毕,可以进行copy
+
+s3 copy完毕, 可以进行put
+
