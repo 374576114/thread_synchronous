@@ -34,10 +34,10 @@ int main(){
 	shmctl(shmids, IPC_RMID, 0);
 	shmctl(shmidt, IPC_RMID, 0);
 
-	semctl(semid, 0, IPC_RMID, NULL);
-	semctl(semid, 1, IPC_RMID, NULL);
-	semctl(semid, 2, IPC_RMID, NULL);
-	semctl(semid, 3, IPC_RMID, NULL);
+//	semctl(semid, 0, IPC_RMID, NULL);
+//	semctl(semid, 1, IPC_RMID, NULL);
+//	semctl(semid, 2, IPC_RMID, NULL);
+//	semctl(semid, 3, IPC_RMID, NULL);
 
 	return 0;
 }
