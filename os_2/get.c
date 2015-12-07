@@ -37,12 +37,6 @@ int main(){
     shmdt(S);
 	shmctl(shmids, IPC_RMID, 0);
 
-
-//	semctl(semid, 0, IPC_RMID, NULL);
-//	semctl(semid, 1, IPC_RMID, NULL);
-//	semctl(semid, 2, IPC_RMID, NULL);
-//	semctl(semid, 3, IPC_RMID, NULL);
-
 	close(fd);
 	return 0;
 }
