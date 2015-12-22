@@ -3,16 +3,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-//#include <linux/sem.h>
-//#include <linux/shm.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
 
 #define FILE_PATH_SRC "./src.txt"
 #define FILE_PATH_DES "./des.txt"
+#define KEY  123456
+#define KEYS 123457
+#define KEYT 1234568
 
 void P(int semid, int index);
 void V(int semid, int index);

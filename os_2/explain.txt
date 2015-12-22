@@ -13,4 +13,6 @@ s0 copy完毕, 可以进行再次get
 		---s2 put完毕,可以进行copy
 
 s3 copy完毕, 可以进行put
+ 
+S -> T
 

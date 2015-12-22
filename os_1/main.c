@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <linux/sem.h>
 #include <unistd.h>
-
 void P(int semid, int index);
 void V(int semid, int index);
 void* subp1();
@@ -42,7 +41,7 @@ void V(int semid, int index){
 // thread1 :print number
 void *subp1(){
 	while(1){
-		P(semid, 1);//if v(s1), that can run
+		P(semid, 1);
 		
 		if(bPrint == 0 ){
 			V(semid, 0);
@@ -50,41 +49,40 @@ void *subp1(){
 		}
 		//print somrhing...
 		printf(" %d \n", a);
-		sleep(1);//sleep 0.1
+		sleep(1);
 		//print end
-		V(semid, 0);//v (s0), sub2 p(s0) can run
+		V(semid, 0);
 	}
 }
 // thread2: compute
 void * subp2(){
 	while(a<max){
+		P(semid, 0);
 		//compute something..
-		if(a < 0){
-			a = 0;
-		}else{
-			a += 1;
-		}
+		a += 1;
 		//compute end
-		
-		V(semid, 1);//v (s1), subp1 p(s1) can run
-		P(semid, 0);//if v(s0), it will run
+		V(semid, 1);
 	}
 	bPrint = 0;
 	V(semid, 1);
 }
 
 int main(){
-	union semun arg;
-	arg.val = 0;//sem will be  0
+	union semun arg0;
+	union semun arg1;
+	arg0.val = 0;
+	arg1.val = 1;
+
 	semid = semget((key_t)1234, 2, IPC_CREAT|0666);
-	semctl(semid, 0, SETVAL, arg);
-	semctl(semid, 1, SETVAL, arg);
+	semctl(semid, 0, SETVAL, arg1);// 1: can compute
+	semctl(semid, 1, SETVAL, arg0);// 1: can print
 	pthread_create(&p1, NULL, subp1, NULL);
 	pthread_create(&p2, NULL, subp2, NULL);
 	pthread_join(p1, NULL);
 	pthread_join(p2, NULL);
 	semctl(semid, 0, IPC_RMID, NULL);
 	semctl(semid, 1, IPC_RMID, NULL);
+
 	return 0;
 }
 

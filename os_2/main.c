@@ -4,23 +4,32 @@
 #define COPY "./copy"
 #define PUT "./put"
 
+union semun{
+	int val;
+	struct semid_ds *buf;
+	unsigned short *array;
+	struct seminfo *__buf;
+};
+
 int main(){
-	int semid = semget((key_t)1234, 4, IPC_CREAT|0666);
-	//union semun arg;
+	int semid = semget((key_t)KEY, 4, IPC_CREAT|0666);
+	union semun arg1, arg0;
 	int shmids, shmidt;
 	char*S, *T;
 	char init[20] ="123";
 	pid_t p1, p2, p3;
 
-	int arg = 0;
 
-	semctl(semid, 0, SETVAL, arg);
-	semctl(semid, 1, SETVAL, arg);
-	semctl(semid, 2, SETVAL, arg);
-	semctl(semid, 3, SETVAL, arg);
+	arg1.val = 1;
+	arg0.val = 0;
 
-	shmids = shmget((key_t)1235, 20, IPC_CREAT|0666);
-	shmidt = shmget((key_t)1236, 20, IPC_CREAT|0666);
+	semctl(semid, 0, SETVAL, arg1);// 1: S is empty (copy end)
+	semctl(semid, 1, SETVAL, arg0);// 1: S is full  (get end )
+	semctl(semid, 2, SETVAL, arg1);// 1: T is empty (put end )
+	semctl(semid, 3, SETVAL, arg0);// 1: T is full  (copy end)
+
+	shmids = shmget((key_t)KEYS, 20, IPC_CREAT|0666);
+	shmidt = shmget((key_t)KEYT, 20, IPC_CREAT|0666);
 
 	S = (char*)shmat(shmids, NULL, 0);
 	T = (char*)shmat(shmidt, NULL, SHM_R|SHM_W);
